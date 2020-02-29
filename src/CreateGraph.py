@@ -23,8 +23,7 @@ def lambda_handler(event, context):
     return response
 
 
-def get_csv(url="https://www.nikkoam.com/products/detail/643335/data/?format=xls") -> str:
-    #url = "https://www.nikkoam.com/products/detail/39187/data/?format=xls"
+def get_csv(url=os.environ['URL']) -> str:
     req = urllib.request.Request(url)
     with urllib.request.urlopen(req) as res:
         body = res.read()
@@ -51,18 +50,16 @@ def create_fig(table_to_plot) -> None:
     fig.plot(table_to_plot['time'], table_to_plot['value'])
     plt.xticks(rotation=90)
     plt.savefig('trend.png')
-    #plt.show()
-    #display_png(Image('trend.png'))
+
 
 def send_fig_to_slack() -> str:
     url = 'https://slack.com/api/files.upload'
     files = {'file': open('trend.png', 'rb')}
     params = {
         "token": os.environ['TOKEN'],
-        "channels": "investment"
+        "channels": os.environ['CHANNELS']
     }
     response = requests.post(url, files=files, params=params)
-    #response.text
 
 if __name__ == '__main__':
     lambda_handler(None, None)
