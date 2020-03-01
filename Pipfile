@@ -9,7 +9,6 @@ jupyter = "*"
 [packages]
 matplotlib = "*"
 requests = "*"
-boto3 = "*"
 pandas = "*"
 
 [requires]
